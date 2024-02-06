@@ -1,28 +1,38 @@
-package com.sparta.springresttemplateclient.service;
+package com.sparta.springresttemplateserver.controller;
 
-import com.sparta.springresttemplateclient.dto.ItemDto;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import com.sparta.springresttemplateserver.dto.ItemResponseDto;
+import com.sparta.springresttemplateserver.dto.UserRequestDto;
+import com.sparta.springresttemplateserver.entity.Item;
+import com.sparta.springresttemplateserver.service.ItemService;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+@RestController
+@RequestMapping("/api/server")
+public class ItemController {
 
-@Slf4j
-@Service
-public class RestTemplateService {
+    private final ItemService itemService;
 
-    public ItemDto getCallObject(String query) {
-        return null;
+    public ItemController(ItemService itemService) {
+        this.itemService = itemService;
     }
 
-    public List<ItemDto> getCallList() {
-        return null;
+    @GetMapping("/get-call-obj")
+    public Item getCallObject(@RequestParam String query) {
+        return itemService.getCallObject(query);
     }
 
-    public ItemDto postCall(String query) {
-        return null;
+    @GetMapping("/get-call-list")
+    public ItemResponseDto getCallList() {
+        return itemService.getCallList();
     }
 
-    public List<ItemDto> exchangeCall(String token) {
-        return null;
+    @PostMapping("/post-call/{query}")
+    public Item postCall(@PathVariable String query, @RequestBody UserRequestDto requestDto) {
+        return itemService.postCall(query, requestDto);
+    }
+
+    @PostMapping("/exchange-call")
+    public ItemResponseDto exchangeCall(@RequestHeader("X-Authorization") String token, @RequestBody UserRequestDto requestDto) {
+        return itemService.exchangeCall(token, requestDto);
     }
 }
